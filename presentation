@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Lead Saver — Presentation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #080b0f;
+  --surface: #0d1117;
+  --surface2: #121820;
+  --border: #1c2333;
+  --border2: #243044;
+  --gold: #f0c040;
+  --blue: #38bdf8;
+  --purple: #a78bfa;
+  --orange: #fb923c;
+  --green: #34d399;
+  --white: #ffffff;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+  --text: #e2e8f0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  background: #000;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+/* ── STAGE ── */
+#stage {
+  width: 100vw; height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.deck {
+  position: relative;
+  width: min(100vw, calc(100vh * 16/9));
+  height: min(100vh, calc(100vw * 9/16));
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* dot grid */
+.deck::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none; z-index: 0;
+}
+
+/* ── SLIDES ── */
+.slide {
+  position: absolute; inset: 0;
+  padding: 6% 7%;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.slide.exit {
+  opacity: 0;
+}
+
+/* ── SHARED TYPOGRAPHY ── */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(8px, 1vw, 11px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.5%;
+}
+h1 {
+  font-size: clamp(28px, 6vw, 72px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  margin-bottom: 2%;
+}
+h1 .g { color: var(--gold); }
+h2 {
+  font-size: clamp(18px, 3.5vw, 42px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  margin-bottom: 1.5%;
+}
+h2 .g { color: var(--gold); }
+.sub {
+  font-size: clamp(10px, 1.4vw, 16px);
+  color: var(--muted2);
+  line-height: 1.7;
+  max-width: 56%;
+  margin-bottom: 4%;
+}
+
+/* ── GRID UTILS ── */
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2%; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.2%; }
+.grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.2%; }
+
+/* ── CARDS ── */
+.card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 5% 6%;
+  position: relative;
+  overflow: hidden;
+}
+.card .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(20px, 4vw, 48px);
+  color: rgba(255,255,255,0.04);
+  font-weight: 400;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  margin-bottom: 6%;
+}
+.card .ctitle {
+  font-size: clamp(10px, 1.3vw, 15px);
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 4%;
+}
+.card .ctext {
+  font-size: clamp(8px, 1vw, 12px);
+  color: var(--muted2);
+  line-height: 1.7;
+}
+.card .badge {
+  margin-top: 8%;
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(7px, 0.8vw, 10px);
+  padding: 2% 5%;
+  border-radius: 4px;
+  background: rgba(251,146,60,0.1);
+  border: 1px solid rgba(251,146,60,0.25);
+  color: var(--orange);
+  letter-spacing: 0.06em;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(240,92,42,0.6), transparent);
+}
+
+/* ── SLIDE 1: TITLE ── */
+#s1 { justify-content: center; }
+#s1 .glow {
+  position: absolute;
+  top: 15%; left: 50%; transform: translateX(-50%);
+  width: 60%; height: 40%;
+  background: radial-gradient(ellipse, rgba(240,192,64,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+#s1 .tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(7px, 0.9vw, 10px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(240,192,64,0.25);
+  background: rgba(240,192,64,0.05);
+  padding: 0.5% 1.5%;
+  border-radius: 100px;
+  margin-bottom: 3%;
+  width: fit-content;
+}
+#s1 .tag-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+#s1 .stats {
+  display: flex; gap: 2%;
+  margin-top: 5%;
+  padding-top: 4%;
+  border-top: 1px solid var(--border);
+}
+#s1 .stat-num {
+  font-size: clamp(18px, 3.5vw, 40px);
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 3%;
+}
+#s1 .stat-num span { color: var(--gold); }
+#s1 .stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(6px, 0.75vw, 9px);
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+/* ── SLIDE 4: RESULTS ── */
+#s4 .big-stat { text-align: center; }
+#s4 .big-num {
+  font-size: clamp(28px, 5.5vw, 64px);
+  font-weight: 800;
+  color: var(--gold);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 6%;
+}
+#s4 .big-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(6px, 0.75vw, 9px);
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  line-height: 1.6;
+}
+#s4 .result-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 8% 5%;
+}
+
+/* ── SLIDE 5: FEATURES ── */
+#s5 .feat-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 10px;
+  padding: 5% 5%;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: default;
+}
+#s5 .feat-card:hover {
+  border-color: var(--border2);
+  transform: translateY(-2px);
+}
+#s5 .feat-icon {
+  width: clamp(28px, 3.5vw, 44px);
+  height: clamp(28px, 3.5vw, 44px);
+  border-radius: 8px;
+  background: rgba(240,192,64,0.08);
+  border: 1px solid rgba(240,192,64,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(14px, 1.8vw, 20px);
+  margin-bottom: 5%;
+}
+#s5 .feat-title {
+  font-size: clamp(9px, 1.1vw, 13px);
+  font-weight: 800; color: var(--white); margin-bottom: 3%;
+}
+#s5 .feat-text {
+  font-size: clamp(7px, 0.85vw, 10.5px);
+  color: var(--muted2); line-height: 1.7;
+}
+#s5 .feat-tag {
+  margin-top: 5%;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(6px, 0.7vw, 9px);
+  letter-spacing: 0.1em; color: var(--green); text-transform: uppercase;
+}
+
+/* ── SLIDE 6: ARCHITECTURE ── */
+#s6 .arch-flow {
+  display: grid;
+  grid-template-columns: 1fr 28px 1fr 28px 1fr 28px 1fr;
+  align-items: center;
+  gap: 0;
+  margin-top: 3%;
+}
+#s6 .arch-box {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 4% 4%;
+}
+#s6 .arch-box.gold { border-color: var(--gold); background: rgba(240,192,64,0.04); }
+#s6 .arch-box.green { border-color: var(--green); background: rgba(52,211,153,0.04); }
+#s6 .arch-arrow {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted);
+  font-size: clamp(10px, 1.2vw, 14px);
+}
+#s6 .arch-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(6px, 0.7vw, 8px);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4%;
+}
+#s6 .arch-name {
+  font-size: clamp(9px, 1.1vw, 13px);
+  font-weight: 800; color: var(--white); margin-bottom: 3%;
+}
+#s6 .arch-detail {
+  font-size: clamp(7px, 0.8vw, 10px);
+  color: var(--muted2); line-height: 1.6;
+}
+#s6 .chip {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(5px, 0.6vw, 7px);
+  padding: 1px 4px; border-radius: 3px;
+  font-weight: 500; letter-spacing: 0.04em;
+  vertical-align: middle; margin: 0 1px;
+}
+#s6 .chip-ai { background: rgba(99,179,237,0.18); color: #90cdf4; }
+#s6 .chip-sheet { background: rgba(72,187,120,0.18); color: #9ae6b4; }
+#s6 .chip-sms { background: rgba(246,173,85,0.18); color: #fbd38d; }
+#s6 .chip-mail { background: rgba(252,129,74,0.18); color: #fbd38d; }
+
+#s6 .dept-row {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 1%;
+  margin-top: 2%;
+}
+#s6 .dept-box {
+  border-radius: 7px;
+  padding: 4% 4%;
+  font-size: clamp(7px, 0.8vw, 10px);
+  color: rgba(255,255,255,0.65);
+  line-height: 1.5;
+}
+#s6 .dept-box.parts { border: 1px solid var(--blue); background: rgba(56,189,248,0.05); }
+#s6 .dept-box.service { border: 1px solid var(--purple); background: rgba(167,139,250,0.05); }
+#s6 .dept-box.sales { border: 1px solid var(--orange); background: rgba(251,146,60,0.05); }
+#s6 .dept-name { font-weight: 800; color: var(--white); margin-bottom: 3%; font-size: clamp(8px, 0.95vw, 11px); }
+
+/* ── SLIDE 7: PRICING ── */
+#s7 .p-card {
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+#s7 .p-card:hover { transform: translateY(-3px); }
+#s7 .p-card.featured {
+  border-color: var(--gold);
+  background: linear-gradient(180deg, rgba(240,192,64,0.05) 0%, var(--surface) 100%);
+}
+#s7 .p-head {
+  padding: 5% 6% 4%;
+  border-bottom: 1px solid var(--border);
+}
+#s7 .p-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(6px, 0.7vw, 8px);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 2% 5%; border-radius: 100px;
+  display: inline-block; margin-bottom: 3%;
+}
+#s7 .p-card:not(.featured) .p-badge {
+  background: rgba(255,255,255,0.05); color: var(--muted2);
+  border: 1px solid var(--border2);
+}
+#s7 .p-card.featured .p-badge {
+  background: rgba(240,192,64,0.12); color: var(--gold);
+  border: 1px solid rgba(240,192,64,0.3);
+}
+#s7 .p-name { font-size: clamp(11px, 1.4vw, 17px); font-weight: 800; color: var(--white); margin-bottom: 2%; }
+#s7 .p-price {
+  font-size: clamp(20px, 3.5vw, 40px); font-weight: 800;
+  color: var(--white); letter-spacing: -0.04em; line-height: 1;
+}
+#s7 .p-period { font-family: 'JetBrains Mono', monospace; font-size: clamp(7px,0.8vw,10px); color: var(--muted); }
+#s7 .p-desc { font-size: clamp(7px,0.8vw,10px); color: var(--muted2); line-height: 1.6; margin-top: 3%; }
+#s7 .p-body { padding: 4% 6% 5%; }
+#s7 .p-features { list-style: none; display: flex; flex-direction: column; gap: 5%; margin-bottom: 5%; }
+#s7 .p-features li {
+  display: flex; align-items: flex-start; gap: 6%;
+  font-size: clamp(7px,0.85vw,10.5px); color: var(--muted2); line-height: 1.5;
+}
+#s7 .p-features li::before { content: '✓'; font-family: 'JetBrains Mono', monospace; font-size: clamp(6px,0.7vw,8px); color: var(--green); flex-shrink: 0; margin-top: 1px; }
+#s7 .p-features li.dim::before { content: '–'; color: var(--muted); }
+#s7 .p-features li.dim { opacity: 0.5; }
+#s7 .p-btn {
+  display: block; width: 100%; padding: 5% 0;
+  border-radius: 7px; text-align: center;
+  font-family: 'Inter', sans-serif; font-size: clamp(8px,1vw,12px);
+  font-weight: 800; text-decoration: none;
+  border: none; cursor: pointer; transition: all 0.2s;
+}
+#s7 .p-card:not(.featured) .p-btn {
+  background: rgba(255,255,255,0.05); color: var(--white);
+  border: 1px solid var(--border2);
+}
+#s7 .p-card.featured .p-btn {
+  background: var(--gold); color: #000;
+  box-shadow: 0 0 20px rgba(240,192,64,0.2);
+}
+
+/* ── SLIDE 8: CTA ── */
+#s8 {
+  align-items: center;
+  text-align: center;
+}
+#s8 .glow {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%; height: 60%;
+  background: radial-gradient(ellipse, rgba(240,192,64,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+#s8 h2 { font-size: clamp(22px, 4.5vw, 56px); text-align: center; max-width: 80%; margin: 0 auto 2%; }
+#s8 .sub { max-width: 50%; margin: 0 auto 5%; text-align: center; }
+#s8 .actions { display: flex; gap: 2%; justify-content: center; }
+#s8 .btn-p {
+  padding: 1.2% 3.5%;
+  border-radius: 8px;
+  background: var(--gold); color: #000;
+  font-family: 'Inter', sans-serif; font-size: clamp(9px,1.1vw,13px); font-weight: 800;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 24px rgba(240,192,64,0.2);
+}
+#s8 .btn-s {
+  padding: 1.2% 3.5%;
+  border-radius: 8px;
+  background: transparent; color: var(--muted2);
+  font-family: 'Inter', sans-serif; font-size: clamp(9px,1.1vw,13px); font-weight: 700;
+  text-decoration: none; border: 1px solid var(--border2); cursor: pointer;
+  transition: all 0.2s;
+}
+
+/* ── HOW IT WORKS (step flow) ── */
+.step-flow { display: flex; flex-direction: column; gap: 4%; }
+.step-item {
+  display: flex; gap: 3%; align-items: flex-start;
+  position: relative;
+}
+.step-num {
+  width: clamp(28px, 3.5vw, 44px);
+  height: clamp(28px, 3.5vw, 44px);
+  border-radius: 10px;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(8px, 1vw, 12px);
+  color: var(--gold);
+  flex-shrink: 0;
+}
+.step-content { padding-top: 0.5%; }
+.step-title { font-size: clamp(10px, 1.3vw, 15px); font-weight: 800; color: var(--white); margin-bottom: 1.5%; }
+.step-text { font-size: clamp(8px, 0.9vw, 11px); color: var(--muted2); line-height: 1.7; }
+
+/* ── NAV ── */
+#nav {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px;
+  z-index: 100;
+}
+#nav button {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border2);
+  background: rgba(13,17,23,0.9);
+  color: var(--muted2);
+  font-size: 14px; cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(8px);
+}
+#nav button:hover { border-color: var(--gold); color: var(--gold); }
+#nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+#dots {
+  display: flex; gap: 7px; align-items: center;
+}
+.dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--border2);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.dot.active { background: var(--gold); width: 18px; border-radius: 3px; }
+#slide-counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--muted);
+  letter-spacing: 0.1em; min-width: 36px; text-align: center;
+}
+
+/* ── SLIDE-IN ANIMATION ── */
+.slide.active .anim { animation: slidein 0.5s ease both; }
+.slide.active .anim-1 { animation-delay: 0.05s; }
+.slide.active .anim-2 { animation-delay: 0.12s; }
+.slide.active .anim-3 { animation-delay: 0.2s; }
+.slide.active .anim-4 { animation-delay: 0.28s; }
+@keyframes slidein {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── PROGRESS BAR ── */
+#progress {
+  position: fixed; top: 0; left: 0;
+  height: 2px;
+  background: var(--gold);
+  transition: width 0.4s ease;
+  z-index: 200;
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<div id="stage">
+<div class="deck">
+
+  <!-- SLIDE 1: TITLE -->
+  <div class="slide active" id="s1">
+    <div class="glow"></div>
+    <div class="tag anim anim-1">
+      <div class="tag-dot"></div>
+      Built for Automotive Dealerships
+    </div>
+    <h1 class="anim anim-2">
+      Your leads don't<br>
+      <span class="g">stop calling</span><br>
+      <span style="color:var(--muted)">at 5pm.</span>
+    </h1>
+    <p class="sub anim anim-3">AI answers every call, qualifies every lead, and follows up automatically — so your team walks in with a pre-qualified pipeline every morning.</p>
+    <div class="stats anim anim-4">
+      <div>
+        <div class="stat-num">0<span>%</span></div>
+        <div class="stat-label">Leads Lost<br>After Hours</div>
+      </div>
+      <div>
+        <div class="stat-num">24<span>/7</span></div>
+        <div class="stat-label">AI Receptionist<br>Always On</div>
+      </div>
+      <div>
+        <div class="stat-num">3</div>
+        <div class="stat-label">Department<br>Agents</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SLIDE 2: PROBLEM -->
+  <div class="slide" id="s2">
+    <div class="eyebrow anim anim-1">The Problem</div>
+    <h2 class="anim anim-2">Every missed call is a <span class="g">missed sale.</span></h2>
+    <p class="sub anim anim-3">Dealerships lose thousands every week to the same three problems — and most don't even know it's happening.</p>
+    <div class="grid-3 anim anim-4">
+      <div class="card">
+        <div class="num">01</div>
+        <div class="ctitle">Voicemails Nobody Checks</div>
+        <div class="ctext">Customers call after hours, hit a generic message, and either hang up or call a competitor. By 9am they're already at another lot.</div>
+        <span class="badge">Revenue you'll never know you missed</span>
+      </div>
+      <div class="card">
+        <div class="num">02</div>
+        <div class="ctitle">Unqualified Lead Chaos</div>
+        <div class="ctext">Salespeople waste hours chasing leads with no info, no context, and no urgency — cold-calling from a voicemail with a first name and callback number.</div>
+        <span class="badge">Hours of wasted sales time</span>
+      </div>
+      <div class="card">
+        <div class="num">03</div>
+        <div class="ctitle">No Follow-Up System</div>
+        <div class="ctext">If a customer doesn't leave info, they disappear forever. There's no mechanism to recover that lead — it simply vanishes.</div>
+        <span class="badge">Silent revenue leak</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: HOW IT WORKS -->
+  <div class="slide" id="s3">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6%;align-items:center;height:100%;">
+      <div>
+        <div class="eyebrow anim anim-1">How It Works</div>
+        <h2 class="anim anim-2">Capture.<br><span class="g">Qualify.</span><br>Deliver.</h2>
+        <p class="sub anim anim-3" style="max-width:100%;margin-bottom:0">A three-layer system that works alongside your existing staff and CRM — no rip and replace.</p>
+      </div>
+      <div class="step-flow anim anim-4">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <div class="step-title">Call Comes In</div>
+            <div class="step-text">A human-sounding AI receptionist answers every call 24/7. During hours it transfers to live staff. After hours, it hands off to the right department agent.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <div class="step-title">Lead Gets Qualified</div>
+            <div class="step-text">The department AI has a natural conversation — collecting name, number, need, and scoring urgency. No scripts, no press-1 menus.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <div class="step-title">Manager Gets Notified</div>
+            <div class="step-text">The right dept manager gets an email immediately — name, number, what they want, and a Hot / Warm / Cold lead score.</div>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <div class="step-title">Nobody Slips Through</div>
+            <div class="step-text">Callers who don't leave info get an automatic SMS follow-up. The AI qualifies them over text before any human gets involved.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: RESULTS -->
+  <div class="slide" id="s4">
+    <div class="eyebrow anim anim-1">Results</div>
+    <h2 class="anim anim-2">What happens when you <span class="g">plug it in.</span></h2>
+    <div class="grid-3 anim anim-3" style="margin-top:4%">
+      <div class="result-card">
+        <div class="big-stat">
+          <div class="big-num">100%</div>
+          <div class="big-label">Of after-hours<br>calls answered</div>
+        </div>
+      </div>
+      <div class="result-card">
+        <div class="big-stat">
+          <div class="big-num">~2min</div>
+          <div class="big-label">Average time to<br>manager notification</div>
+        </div>
+      </div>
+      <div class="result-card">
+        <div class="big-stat">
+          <div class="big-num">3x</div>
+          <div class="big-label">Depts covered<br>simultaneously</div>
+        </div>
+      </div>
+    </div>
+    <p class="anim anim-4" style="margin-top:4%;font-family:'JetBrains Mono',monospace;font-size:clamp(8px,0.9vw,11px);color:var(--muted);letter-spacing:0.08em;text-align:center">No voicemail. No manual follow-up. No missed opportunities.</p>
+  </div>
+
+  <!-- SLIDE 5: FEATURES -->
+  <div class="slide" id="s5">
+    <div class="eyebrow anim anim-1">Features</div>
+    <h2 class="anim anim-2">Everything a dealership <span class="g">actually needs.</span></h2>
+    <div class="grid-3 anim anim-3" style="margin-top:3%">
+      <div class="feat-card">
+        <div class="feat-icon">🎙️</div>
+        <div class="feat-title">High-Quality Voice AI</div>
+        <div class="feat-text">ElevenLabs-powered voice — one of the best available. Not indistinguishable from human, but natural enough that callers engage rather than hang up.</div>
+        <div class="feat-tag">↳ Powered by ElevenLabs</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔀</div>
+        <div class="feat-title">Smart Department Routing</div>
+        <div class="feat-text">Three dedicated lines — Parts, Service, Sales. Each with its own AI agent, qualification logic, and notification chain.</div>
+        <div class="feat-tag">↳ Independent per dept</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-title">Instant Manager Alerts</div>
+        <div class="feat-text">The moment a call ends, the right manager gets an email with caller name, number, what they need, and a lead score.</div>
+        <div class="feat-tag">↳ Via Gmail</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">💬</div>
+        <div class="feat-title">AI SMS Follow-Up</div>
+        <div class="feat-text">Callers who don't leave info get an automatic follow-up text. AI qualifies them over SMS before any human gets involved.</div>
+        <div class="feat-tag">↳ Via Twilio</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🛡️</div>
+        <div class="feat-title">Opt-Out Protection</div>
+        <div class="feat-text">Built-in STOP detection. Customers who opt out are immediately logged and never contacted again. Fully compliant.</div>
+        <div class="feat-tag">↳ Do Not Contact list</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📊</div>
+        <div class="feat-title">No CRM Required</div>
+        <div class="feat-text">Works alongside CDK, DealerSocket, VinSolutions — or nothing. Lead data tracked in Google Sheets with duplicate-contact guard built in.</div>
+        <div class="feat-tag">↳ Zero integration needed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: ARCHITECTURE -->
+  <div class="slide" id="s6">
+    <div class="eyebrow anim anim-1">Architecture</div>
+    <h2 class="anim anim-2" style="margin-bottom:1%">From first ring to <span class="g">manager's inbox.</span></h2>
+
+    <div class="arch-flow anim anim-3">
+      <div class="arch-box gold">
+        <div class="arch-label">Phone</div>
+        <div class="arch-name">Twilio</div>
+        <div class="arch-detail">4 dedicated numbers — one per dept. Calls routed to ElevenLabs after hours.</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box gold">
+        <div class="arch-label">Voice AI</div>
+        <div class="arch-name">ElevenLabs</div>
+        <div class="arch-detail">Handles voice conversation. Fires webhook to n8n on call end — passing caller phone # as key.</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">
+        <div class="arch-label">Orchestration</div>
+        <div class="arch-name">n8n</div>
+        <div class="arch-detail">Routes webhook to right dept. Runs GPT-4.1 to qualify lead. Checks for duplicate contacts.</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box green">
+        <div class="arch-label">Output</div>
+        <div class="arch-name">Email + SMS</div>
+        <div class="arch-detail">Manager notified via Gmail. Caller gets confirmation SMS. Lead logged to Sheets. <span class="chip chip-mail">GMAIL</span> <span class="chip chip-sms">SMS</span> <span class="chip chip-sheet">SHEETS</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:2%;font-family:'JetBrains Mono',monospace;font-size:clamp(6px,0.7vw,8px);letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1%" class="anim anim-3">↓ After hours — per department</div>
+
+    <div class="dept-row anim anim-4">
+      <div class="dept-box parts">
+        <div class="dept-name">🔧 Parts Agent</div>
+        Qualifies caller → logs to Sheets → emails Parts mgmt → sends confirmation SMS → enters follow-up queue if no info
+      </div>
+      <div class="dept-box service">
+        <div class="dept-name">🛠️ Service Agent</div>
+        Qualifies caller → logs to Sheets → emails Service mgmt → sends confirmation SMS → enters follow-up queue if no info
+      </div>
+      <div class="dept-box sales">
+        <div class="dept-name">💼 Sales Agent</div>
+        Qualifies caller → scores lead Hot/Warm/Cold → emails Sales mgmt → SMS → follow-up queue if no info
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- SLIDE 8: CTA -->
+  <div class="slide" id="s8">
+    <div class="glow"></div>
+    <div class="eyebrow anim anim-1" style="text-align:center;display:block">Ready?</div>
+    <h2 class="anim anim-2">Your next sale called <span class="g">last night.</span></h2>
+    <p class="sub anim anim-3">Stop letting after-hours leads go cold. Get the full system running at your dealership in under a week.</p>
+
+  </div>
+
+</div><!-- .deck -->
+</div><!-- #stage -->
+
+<!-- NAV -->
+<div id="nav">
+  <button id="btn-prev" onclick="go(-1)" disabled>←</button>
+  <div id="dots"></div>
+  <button id="btn-next" onclick="go(1)">→</button>
+  <div id="slide-counter">1 / 8</div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+// Build dots
+const dotsEl = document.getElementById('dots');
+slides.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+});
+
+function updateProgress() {
+  document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+}
+
+function goTo(n) {
+  slides[current].classList.remove('active');
+  slides[current].classList.add('exit');
+  setTimeout(() => slides[current].classList.remove('exit'), 500);
+  current = n;
+  slides[current].classList.add('active');
+
+  // Update dots
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i === current);
+  });
+
+  document.getElementById('btn-prev').disabled = current === 0;
+  document.getElementById('btn-next').disabled = current === total - 1;
+  document.getElementById('slide-counter').textContent = (current + 1) + ' / ' + total;
+  updateProgress();
+}
+
+function go(dir) {
+  const next = current + dir;
+  if (next >= 0 && next < total) goTo(next);
+}
+
+// Keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') go(1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go(-1);
+});
+
+// Touch/swipe
+let startX = 0;
+document.querySelector('.deck').addEventListener('touchstart', e => startX = e.touches[0].clientX);
+document.querySelector('.deck').addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - startX;
+  if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+});
+
+updateProgress();
+</script>
+</body>
+</html>
